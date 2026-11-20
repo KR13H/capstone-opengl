@@ -30,7 +30,15 @@ void main() {
 
     vec4 color;
     if(h >= 0.0) {
-    color = vec4(1.0, 0.5, 0.2, 1.0);
+    float dist = -b - sqrt(h); // how far along the ray the hit is
+    vec3 hitPoint = dist * rayDir; // exact 3d point on the ball
+    vec3 normal = normalize(hitPoint - center); // direction staright out of surface
+    //color = vec4(1.0, 0.5, 0.2, 1.0); // orange color
+    //color = vec4(normal * 0.5 + 0.5, 1.0);
+    //vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0));
+    vec3 lightDir = normalize(vec3(cos(t), 1.0, sin(t)));
+    float diffuse = max(dot(normal, lightDir),0.0);
+    color = vec4(diffuse * vec3(1.0, 0.5, 0.2) , 1.0);
     } else {
      color = vec4(rayDir * 0.5 + 0.5,1.0);
     }
