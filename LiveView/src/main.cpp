@@ -17,9 +17,10 @@ uniform float t;
 void main() {
     ivec2 p = ivec2(gl_GlobalInvocationID.xy);
     vec2 uv = vec2(p) / vec2(800.0, 600.0);
-    float d = length(uv - vec2(0.5));
-    float wave = 0.5 + 0.5 * sin(d * 40.0 - t * 5.0);
-    imageStore(img, p, vec4(uv.x, uv.y, wave, 1.0));
+    vec2 ndc = uv * 2.0 - 1.0;                       // 0..1  →  -1..1  (center = 0)
+    ndc.x *= 800.0 / 600.0;                          // aspect ratio, like in perspective()
+    vec3 rayDir = normalize(vec3(ndc, -1.0));        // camera looks down -z
+    imageStore(img, p, vec4(rayDir * 0.5 + 0.5, 1.0));   // show the direction as a color
 }
 )";
 
